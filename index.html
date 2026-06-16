@@ -61,10 +61,12 @@ body{font-family:'Nunito',sans-serif;background:#2a5c38;min-height:100vh;color:#
 
 /* ── Calibration dot ── */
 .cal-dot{
-  position:fixed;z-index:2003;
+  position:fixed;
+  z-index:2003;
   border-radius:50%;
   transform:translate(-50%,-50%);
-  pointer-events:none; /* clicks come from the overlay instead */
+  pointer-events:auto;
+  cursor:pointer;
   transition:opacity .25s;
 }
 /* Outer ring — helps fixation */
@@ -669,7 +671,7 @@ function openCalibration() {
 
   _buildCalDots(CAL_TRAIN_POS);
   showScreen('calScreen');
-  document.getElementById('calClickCatcher').style.display = 'block';
+ document.getElementById('calClickCatcher').style.display = 'none';
   _activateDot(0);
 }
 
@@ -686,8 +688,13 @@ function _buildCalDots(positions) {
     el.style.left = sx + 'px';
     el.style.top  = sy + 'px';
     el.innerHTML  = '<div class="ring"></div><div class="body"></div><canvas width="60" height="60"></canvas>';
-    document.getElementById('calScreen').appendChild(el);
-    calState.dots.push({ el, sx, sy });
+el.addEventListener('click', (e) => {
+  e.stopPropagation();
+  onCalClick();
+});
+
+document.getElementById('calScreen').appendChild(el);
+calState.dots.push({ el, sx, sy });
   });
 }
 
